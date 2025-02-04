@@ -1,0 +1,199 @@
+import random
+
+# Creating Stock Market class w/ attributes(prices)
+
+class StockMarket:
+
+    def __init__(self):
+
+        self.prices = {"AAPL": 150.0, "GOOGL": 2800.0, "COST": 1005.0, "MSFT": 410.0}
+
+        self.portfolio = {}
+
+        self.money = 10000.0
+
+    # Defining the market simulation method
+
+    def simulate_market(self):
+
+        for symbol in self.prices:
+
+            change = random.uniform(-0.05, 0.05)
+
+            self.prices[symbol] = round(self.prices[symbol] * (1 + change), 2)
+
+    # Creating the method to showcase the stocks
+
+    def display_stock(self):
+
+        print("\nAvailable Stocks and Prices:")
+
+        for symbol, price in self.prices.items():
+
+            print(f" {symbol}: ${price}")
+
+        print()
+
+    # Defining method to display portfolio
+
+    def display_portfolio(self):
+
+        print("\nYour Portfolio:")
+
+        if self.portfolio:
+
+            for symbol, shares in self.portfolio.items():
+
+                print(f" {symbol}: {shares} shares")
+
+        else:
+
+            print(" You do not own any stocks yet.")
+
+        print(f" Available cash: ${round(self.money, 2)}\n")
+
+    # Defining method to purchase stocks in the market
+
+    def buy_stock(self, symbol, shares):
+
+        if symbol not in self.prices:
+
+            print("Stock not available.")
+
+            return
+
+        cost = self.prices[symbol] * shares
+
+        if cost > self.money:
+
+            print("Not enough cash to complete this purchase.")
+
+        else:
+
+            self.money -= cost
+
+            self.portfolio[symbol] = self.portfolio.get(symbol, 0) + shares
+
+            print(f"Bought {shares} shares of {symbol} for ${cost:.2f}")
+
+    # Defining method for selling a stock in the market
+
+    def sell_stock(self, symbol, shares):
+
+        if symbol not in self.portfolio or self.portfolio[symbol] < shares:
+
+            print("Not enough shares to sell.")
+
+        else:
+
+            revenue = self.prices[symbol] * shares
+
+            self.money += revenue
+
+            self.portfolio[symbol] -= shares
+
+            if self.portfolio[symbol] == 0:
+
+                del self.portfolio[symbol]
+
+            print(f"Sold {shares} shares of {symbol} for ${revenue:.2f}")
+
+# Defining main function for user interaction
+
+def main():
+
+    app = StockMarket()
+
+    while True:
+
+        # Setting up menu/options for users 
+
+        print("Stock Market App Command Menu:")
+
+        print("   1. Display available stocks")
+
+        print("   2. Display your portfolio")
+
+        print("   3. Buy stocks")
+
+        print("   4. Sell stocks")
+
+        print("   5. Simulate market day")
+
+        print("   6. Quit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+
+            app.display_stock()
+
+        elif choice == "2":
+
+            app.display_portfolio()
+
+        elif choice == "3":
+
+            symbol = input("Enter stock symbol to buy: ").upper()
+
+            try:
+
+                shares = int(input("Enter number of shares to buy: "))
+
+                if shares <= 0:
+
+                    print("Number of shares must be positive.")
+
+                    continue
+
+            except ValueError:
+
+                print("Invalid number of shares. Please enter a valid number.")
+
+                continue
+
+            app.buy_stock(symbol, shares)
+
+        elif choice == "4":
+
+            symbol = input("Enter stock symbol to sell: ").upper()
+
+            try:
+
+                shares = int(input("Enter number of shares to sell: "))
+
+                if shares <= 0:
+
+                    print("Number of shares must be positive.")
+
+                    continue
+
+            except ValueError:
+
+                print("Invalid number of shares. Please enter a valid number.")
+
+                continue
+
+            app.sell_stock(symbol, shares)
+
+        elif choice == "5":
+
+            app.simulate_market()
+
+            print("Market day simulated. Stock prices have been updated.")
+
+        elif choice == "6":
+
+            print("Exiting the app. Goodbye!")
+
+            break
+
+        else:
+
+            print("Invalid choice. Please enter a number between 1 and 6.")
+
+# Code that runs the script
+
+if __name__ == "__main__":
+  
+    main()
